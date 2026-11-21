@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  lr-database:
+    build:
+      context: ../..
+      dockerfile: adapters/docker/Dockerfile
+    volumes:
+      - ./project:/project
+      - ollama-data:/root/.ollama
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    # Uncomment to use local Ollama
+    # depends_on:
+    #   - ollama
+
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   volumes:
+  #     - ollama-data:/root/.ollama
+  #   ports:
+  #     - "11434:11434"
+
+volumes:
+  ollama-data:

@@ -1,0 +1,48 @@
+---
+description: Literature Review Database Pipeline
+globs: ["**/Incoming/*.pdf"]
+alwaysApply: false
+---
+
+# LR Database Skill for Cursor
+
+When user mentions "literature review", "LR database", "process papers", or drops PDFs in `Incoming/`:
+1. Use the `lr-database` commands below
+2. Works with any model configured in Cursor (OpenAI, Anthropic, etc.)
+3. Output goes to `Outputs/` and `SOP-Log.md`
+
+## Commands
+
+### Run Full Pipeline
+```bash
+npx tsx ~/.opencode/skill/lr-database/adapters/opencode/tools/lr-batch.ts -r .
+```
+
+### Individual Steps
+```bash
+# 1. Ingest - normalize filenames
+npx tsx ~/.opencode/skill/lr-database/adapters/opencode/tools/lr-ingest.ts -r .
+
+# 2. Dedup - find duplicates
+npx tsx ~/.opencode/skill/lr-database/adapters/opencode/tools/lr-dedup.ts -r .
+
+# 3. Extract PDFs - get content for LLM
+npx tsx ~/.opencode/skill/lr-database/adapters/opencode/tools/lr-extract-pdfs.ts -r .
+
+# 4. Assemble - write to Excel (after LLM extraction)
+npx tsx ~/.opencode/skill/lr-database/adapters/opencode/tools/lr-assemble.ts -r . -i extractions.json
+
+# 5. Verify - check quality
+npx tsx ~/.opencode/skill/lr-database/adapters/opencode/tools/lr-verify.ts -r .
+
+# 6. Log - write SOP-Log.md
+npx tsx ~/.opencode/skill/lr-database/adapters/opencode/tools/lr-log.ts -r . -k 5 -d 0 --serial-start 1 --serial-end 5
+```
+
+## Extraction Workflow
+
+1. Run `lr-extract-pdfs` to get PDF content
+2. Copy the extraction prompt and PDF content
+3. Paste into Cursor Chat with your model
+4. Get JSON result, save as `extractions.json`
+5. Run `lr-assemble` with the extracted data

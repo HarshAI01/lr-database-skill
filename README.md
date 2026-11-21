@@ -1,79 +1,140 @@
-# LR Database Skill — Literature Review Database Pipeline
+# LR Database — Literature Review Database Pipeline
 
-A **free, open-source** OpenCode skill that fully automates the **Literature Review Database SOP** (Standard Operating Procedure). Processes PDF batches through a 6-step pipeline: Ingest → Deduplicate → Extract (LLM) → Assemble (Excel) → Verify → Log.
+A **free, open-source** universal toolkit that fully automates the **Literature Review Database SOP** (Standard Operating Procedure). Processes PDF batches through a 6-step pipeline: Ingest → Deduplicate → Extract (LLM) → Assemble (Excel) → Verify → Log.
+
+**Works on ANY platform**: OpenCode, Claude Desktop (MCP), Cursor, VS Code, Claude Code, Standalone CLI, Docker.
 
 ## Features
 
 - **Complete SOP Automation**: All 6 steps from `SOP.md` implemented faithfully
-- **Model-Agnostic**: Works with any OpenCode model (OpenAI, Anthropic, Gemini, Ollama, local, etc.) — no restrictions, no defaults
+- **Model-Agnostic**: Works with any LLM (OpenAI, Anthropic, Gemini, Ollama, local, etc.) — no restrictions, no defaults
 - **Excel Formatting Fidelity**: Preserves 10pt Calibri, wrapped text, top-aligned, thin borders, auto-filter via Python/openpyxl
 - **Smart Deduplication**: Title token Jaccard + first-page content comparison (DOI, title/author overlap)
 - **No External Templates**: Creates SOP-compliant Excel files automatically
-- **OpenCode Native**: Skill.json, tools, workflows, system prompt — install and run
+- **Multi-Platform**: Native adapters for OpenCode, Claude MCP, Cursor, CLI, Docker
 - **Free & Open Source**: MIT licensed, no limits, no tiers
 
-## Quick Start
+---
 
-### 1. Install the Skill
+## Quick Start (Universal)
+
+### One-Line Install (All Platforms)
 
 ```bash
-# Copy the skill folder to your OpenCode skills directory
-cp -r lr-database-skill ~/.opencode/skill/lr-database
-
-# Install dependencies
-cd ~/.opencode/skill/lr-database
-npm install
+curl -fsSL https://raw.githubusercontent.com/HarshAI01/lr-database-skill/main/install-universal.sh | bash
 ```
 
-### 2. Configure Your Model in OpenCode
+This detects your platform and installs the appropriate adapter.
 
-OpenCode uses whatever model you have configured. Set up your preferred model:
+---
 
-- **OpenAI**: `opencode config set model openai/gpt-4o`
-- **Anthropic**: `opencode config set model anthropic/claude-3-5-sonnet`
-- **Gemini**: `opencode config set model gemini/gemini-1.5-pro`
-- **Ollama (local)**: `opencode config set model ollama/llama3.1`
-- **Any other**: Configure in OpenCode settings
+## Platform-Specific Installation
 
-### 3. Set Up Your Project
+### 1. OpenCode (Native Skill)
 
 ```bash
-mkdir my-literature-review
-cd my-literature-review
+# Auto-install
+curl -fsSL https://raw.githubusercontent.com/HarshAI01/lr-database-skill/main/install-universal.sh | bash
+# Select "OpenCode"
 
-# Folders auto-created on first run
-```
+# Or manual
+git clone https://github.com/HarshAI01/lr-database-skill ~/.opencode/skill/lr-database
+cd ~/.opencode/skill/lr-database && npm install
 
-### 4. Add PDFs
-
-```bash
-mkdir -p Incoming
-cp ~/papers/*.pdf Incoming/
-```
-
-### 5. Run
-
-```bash
-# Via OpenCode (recommended)
+# Use
 opencode run lr-batch
+```
+
+### 2. Claude Desktop (MCP Server)
+
+```bash
+# Auto-install
+curl -fsSL https://raw.githubusercontent.com/HarshAI01/lr-database-skill/main/install-universal.sh | bash
+# Select "Claude Desktop"
+
+# Or manual
+git clone https://github.com/HarshAI01/lr-database-skill ~/.config/claude/mcp/lr-database
+cd ~/.config/claude/mcp/lr-database/adapters/claude-mcp && npm install
+```
+
+Add to `~/.config/claude/claude_desktop_config.json`:
+```json
+{
+  "mcpServers": {
+    "lr-database": {
+      "command": "node",
+      "args": ["/home/user/.config/claude/mcp/lr-database/adapters/claude-mcp/server.js"],
+      "env": { "OPENAI_API_KEY": "sk-..." }
+    }
+  }
+}
+```
+
+**Tools available in Claude**: `lr_batch`, `lr_ingest`, `lr_dedup`, `lr_extract_pdfs`, `lr_assemble`, `lr_verify`, `lr_log`, `lr_get_extraction_prompt`
+
+### 3. Cursor / VS Code
+
+```bash
+# Auto-install
+curl -fsSL https://raw.githubusercontent.com/HarshAI01/lr-database-skill/main/install-universal.sh | bash
+# Select "Cursor"
+```
+
+Or manual - adds `.cursor/rules/lr-database.mdc` with commands.
+
+**Commands in Cursor Terminal**:
+```bash
+npx tsx ~/.opencode/skill/lr-database/adapters/opencode/tools/lr-batch.ts -r .
+npx tsx ~/.opencode/skill/lr-database/adapters/opencode/tools/lr-extract-pdfs.ts -r .
+# ... etc
+```
+
+### 4. Standalone CLI (Any Terminal)
+
+```bash
+# Auto-install
+curl -fsSL https://raw.githubusercontent.com/HarshAI01/lr-database-skill/main/install-universal.sh | bash
+# Select "CLI"
+
+# Or manual
+git clone https://github.com/HarshAI01/lr-database-skill
+cd lr-database-skill/adapters/cli && npm install && npm link
+
+# Use anywhere
+lr-db batch -r /path/to/project
+lr-db extract -r /path/to/project
+lr-db assemble -r /path/to/project -i extractions.json
+lr-db prompt  # Print extraction prompt for LLM
+```
+
+### 5. Docker
+
+```bash
+# Build
+git clone https://github.com/HarshAI01/lr-database-skill
+cd lr-database-skill/adapters/docker && docker build -t lr-database .
+
+# Run
+docker run -v /path/to/project:/project lr-database batch -r /project
+
+# With Docker Compose
+cd lr-database-skill/adapters/docker && docker-compose up
 ```
 
 ---
 
-## How It Works
+## How It Works (Universal Pipeline)
 
-The skill provides **tools** for each pipeline step. The **agent (you/OpenCode)** uses its configured model to do the extraction:
+| Step | Tool | Description |
+|------|------|-------------|
+| 1. **Ingest** | `lr_ingest` / `lr-db ingest` | Scan `Incoming/`, normalize filenames |
+| 2. **Dedup** | `lr_dedup` / `lr-db dedup` | Compare against `Database/` + within batch; move duplicates to `Set-Aside/` |
+| 3. **Extract** | `lr_extract_pdfs` / `lr-db extract` | Read PDFs, return content + extraction prompt for **your LLM** |
+| 4. **Assemble** | `lr_assemble` / `lr-db assemble` | Write extracted data to Excel with SOP formatting |
+| 5. **Verify** | `lr_verify` / `lr-db verify` | Check counts, bijection, serials, spot-checks |
+| 6. **Log** | `lr_log` / `lr-db log` | Append entry to `SOP-Log.md` |
 
-| Step | Tool | What Happens |
-|------|------|--------------|
-| 1. Ingest | `lr-ingest` | Normalizes filenames in `Incoming/` |
-| 2. Dedup | `lr-dedup` | Compares against `Database/` + within batch; moves duplicates to `Set-Aside/` |
-| 3. Extract | `lr-extract` | Reads PDF text, returns content for **agent to extract** using its model |
-| 4. Assemble | `lr-assemble` | Writes Excel with SOP formatting from agent-provided data |
-| 5. Verify | `lr-verify` | Checks counts, bijection, serials, spot-checks |
-| 6. Log | `lr-log` | Appends entry to `SOP-Log.md` |
-
-**No LLM config in the skill** — the agent uses its own model for extraction.
+**Key Design**: The toolkit handles **file operations & Excel formatting**. **Your LLM does the extraction** — no model lock-in.
 
 ---
 
@@ -124,7 +185,7 @@ The skill provides **tools** for each pipeline step. The **agent (you/OpenCode)*
 | `scope` | Screening scope (optional) | `""` |
 | `pythonPath` | Python executable | `python` |
 
-**No LLM configuration** — uses your OpenCode model automatically.
+**No LLM configuration** — uses your platform's model automatically.
 
 ---
 
@@ -132,7 +193,35 @@ The skill provides **tools** for each pipeline step. The **agent (you/OpenCode)*
 
 - Node.js 20+
 - Python 3.10+ with `openpyxl` (installed via `npm install`)
-- OpenCode with any model configured
+- Any LLM configured in your platform (OpenCode, Cursor, Claude, etc.)
+
+---
+
+## Project Structure
+
+```
+lr-database-skill/
+├── core/                      # Universal TypeScript/Python pipeline
+│   ├── src/
+│   │   ├── schemas.ts         # Zod schemas (87 + 20 fields)
+│   │   ├── pipeline.ts        # Core orchestrator
+│   │   └── index.ts
+│   ├── package.json
+│   └── tsconfig.json
+├── python/                    # Excel formatting (openpyxl)
+│   ├── create_templates.py    # Creates SOP templates
+│   ├── assemble_excel.py      # Appends with SOP formatting
+│   ├── get_last_serial.py     # Helper
+│   └── requirements.txt
+├── adapters/                  # Platform-specific wrappers
+│   ├── opencode/              # OpenCode skill (skill.json, tools, workflows)
+│   ├── claude-mcp/            # MCP server for Claude Desktop
+│   ├── cursor/                # Cursor rules (.mdc)
+│   ├── cli/                   # Standalone CLI (npm link)
+│   └── docker/                # Dockerfile + docker-compose
+├── install-universal.sh       # Universal installer
+└── README.md
+```
 
 ---
 

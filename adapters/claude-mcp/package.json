@@ -1,0 +1,14 @@
+{
+  "name": "@lr-database/claude-mcp",
+  "version": "0.1.0",
+  "description": "Claude Desktop MCP Server for LR Database",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  }
+}
