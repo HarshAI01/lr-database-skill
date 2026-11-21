@@ -1,0 +1,53 @@
+name: "LR Database — Full SOP Pipeline"
+description: "Run the complete Literature Review Database pipeline (ingest → dedup → extract → assemble → verify → log)"
+version: "0.1.0"
+
+# This workflow runs the lr-batch tool which executes all 6 SOP steps
+steps:
+  - name: "Run Full Pipeline"
+    tool: "lr-batch"
+    description: "Execute complete SOP pipeline on Incoming/ folder"
+    params:
+      root: "{{projectRoot}}"
+      provider: "{{llm.provider}}"
+      model: "{{llm.model}}"
+      apiKey: "{{llm.apiKey}}"
+      scope: "{{scope}}"
+      tier: "{{license.tier}}"
+      maxPapers: "{{license.maxPapersPerBatch}}"
+      python: "{{pythonPath}}"
+
+# Alternative: Run individual steps for debugging
+# - name: "Ingest Only"
+#   tool: "lr-ingest"
+#   params:
+#     root: "{{projectRoot}}"
+#
+# - name: "Deduplicate"
+#   tool: "lr-dedup"
+#   params:
+#     root: "{{projectRoot}}"
+#
+# - name: "Extract"
+#   tool: "lr-extract"
+#   params:
+#     root: "{{projectRoot}}"
+#     provider: "{{llm.provider}}"
+#     model: "{{llm.model}}"
+#     apiKey: "{{llm.apiKey}}"
+#
+# - name: "Assemble"
+#   tool: "lr-assemble"
+#   params:
+#     root: "{{projectRoot}}"
+#     python: "{{pythonPath}}"
+#
+# - name: "Verify"
+#   tool: "lr-verify"
+#   params:
+#     root: "{{projectRoot}}"
+#
+# - name: "Log"
+#   tool: "lr-log"
+#   params:
+#     root: "{{projectRoot}}"

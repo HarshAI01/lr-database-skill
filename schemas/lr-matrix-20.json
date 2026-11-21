@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LR Matrix Record (20 columns)",
+  "type": "object",
+  "description": "Literature Review matrix row per SOP §5B. Order matters — matches Excel column order exactly.",
+  "properties": {
+    "S. No.": { "type": "integer", "description": "Continuous serial from 1, no gaps, no repeats. Header row = 1, first data = 2" },
+    "File Name": { "type": "string", "description": "Exact filename matching Database/ and metadata record" },
+    "Title": { "type": "string", "description": "Title as printed (same as metadata Title)" },
+    "Author": { "type": "string", "description": "Display form: First-Last joined with commas. E.g., \"Pankaj Sharma, Tirthankar Patnaik\"" },
+    "Year": { "type": "string", "description": "Year as printed (same as metadata Publication Year)" },
+    "Journal": { "type": "string", "description": "Journal name as printed (same as metadata Publication Title)" },
+    "DOI": { "type": "string", "description": "Full https://doi.org/... link, or blank if none" },
+    "Objective": { "type": "string", "description": "40-70 words. Research questions, hypotheses, motivation from end of Introduction." },
+    "Methodology": { "type": "string", "description": "60-100 words with concrete specifics and reported statistics. Data, Methods, sample, period, variables, techniques." },
+    "Key Finding": { "type": "string", "description": "60-100 words with concrete specifics and reported statistics. Copy reported numbers; never invent." },
+    "Discussion": { "type": "string", "description": "40-70 words. Discussion and Conclusion sections." },
+    "Limitation": { "type": "string", "description": "30-60 words. If paper states none, summarise scope boundary honestly." },
+    "Theoretical Framework": { "type": "string", "description": "Only frameworks the paper names or clearly applies, otherwise blank." },
+    "Tag 1 (Method)": { "type": "string", "description": "Method tag from paper (e.g., NARDL, QNARDL, SEM, Regression, Case Study)" },
+    "Tag 2 (Type of Research)": { "type": "string", "enum": ["Quantitative", "Qualitative", "Mixed", "Review-Theoretical", "Reference"], "description": "Research-type tag. New value 'Reference' for textbooks/teaching handouts." },
+    "Independent Variable": { "type": "string", "description": "Main independent variable(s) as named in paper" },
+    "Dependent Variable": { "type": "string", "description": "Main dependent variable(s) as named in paper" },
+    "Other Variable": { "type": "string", "description": "Control, moderator, mediator variables" },
+    "Decision (For Me)": { "type": "string", "enum": ["Include", "Exclude", ""], "default": "", "description": "Blank by default (keep-all). Only filled on explicit screening request." },
+    "Reason (For Me)": { "type": "string", "default": "", "description": "Reason for decision. Blank by default." }
+  },
+  "required": [
+    "S. No.", "File Name", "Title", "Author", "Year", "Journal", "DOI",
+    "Objective", "Methodology", "Key Finding", "Discussion", "Limitation",
+    "Theoretical Framework", "Tag 1 (Method)", "Tag 2 (Type of Research)",
+    "Independent Variable", "Dependent Variable", "Other Variable",
+    "Decision (For Me)", "Reason (For Me)"
+  ],
+  "additionalProperties": false
+}

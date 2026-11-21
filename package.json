@@ -1,0 +1,44 @@
+{
+  "name": "lr-database-skill",
+  "version": "0.1.0",
+  "description": "Literature Review Database Pipeline - OpenCode Skill",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/pipeline/cli.ts",
+    "test": "vitest run",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "postinstall": "cd python && pip install -r requirements.txt"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.12.0",
+    "@google/generative-ai": "^0.24.1",
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "exceljs": "^4.4.0",
+    "fast-glob": "^3.3.2",
+    "js-yaml": "^4.1.0",
+    "openai": "^7.62.0",
+    "ora": "^8.1.0",
+    "pdf-parse": "^1.1.1",
+    "pdf2pic": "^3.1.1",
+    "uuid": "^10.0.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.5.0",
+    "@types/pdf-parse": "^1.1.4",
+    "@types/uuid": "^10.0.0",
+    "eslint": "^9.9.0",
+    "prettier": "^3.3.3",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

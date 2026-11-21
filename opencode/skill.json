@@ -1,0 +1,45 @@
+{
+  "name": "lr-database",
+  "version": "0.1.0",
+  "description": "Literature Review Database Pipeline — Full SOP automation (ingest, dedup, extract, assemble, verify, log). Zero-config: uses your OpenCode model automatically. No external templates needed - creates SOP-compliant Excel files automatically. Free and open source.",
+  "author": "Your Name",
+  "license": "MIT",
+  "opencode": {
+    "version": ">=0.5.0"
+  },
+  "tools": [
+    "lr-batch",
+    "lr-ingest",
+    "lr-dedup",
+    "lr-extract",
+    "lr-assemble",
+    "lr-verify",
+    "lr-log"
+  ],
+  "workflows": [
+    "lr-full-pipeline"
+  ],
+  "config": {
+    "schema": {
+      "type": "object",
+      "properties": {
+        "projectRoot": {
+          "type": "string",
+          "description": "Project root folder (will create Incoming/, Database/, Outputs/, Set-Aside/ automatically)",
+          "default": "."
+        },
+        "scope": {
+          "type": "string",
+          "description": "One-paragraph topic scope for screening (optional, default keep-all)",
+          "default": ""
+        },
+        "pythonPath": {
+          "type": "string",
+          "description": "Path to python executable for Excel formatting",
+          "default": "python"
+        }
+      },
+      "required": ["projectRoot"]
+    }
+  }
+}
