@@ -13,8 +13,7 @@ You have access to the **lr-batch** tool which executes the complete 6-step SOP 
 5. **Verify** — Row counts, file↔row bijection, serial continuity, blank titles, spot-check 2 PDFs
 6. **Log** — Append structured entry to `SOP-Log.md`
 
-**Default LLM**: Local **Ollama** (llama3.1 @ http://localhost:11434) — zero config, no API keys.
-Cloud providers (OpenAI, Anthropic, Gemini) also supported via config.
+**Model**: Uses whatever model you have configured in OpenCode (OpenAI, Anthropic, Gemini, Ollama, local, etc.) — no restrictions, no defaults.
 
 ## SOP Rules You Enforce
 
