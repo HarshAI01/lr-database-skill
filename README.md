@@ -7,6 +7,13 @@
 > keys, and no platform adapters. Start with
 > [`lr-database/SKILL.md`](lr-database/SKILL.md); the field-level rules are in
 > [`lr-database/references/sop-rules.md`](lr-database/references/sop-rules.md).
+>
+> **No-install skill (text-only).** [`lr-database-text/`](lr-database-text/) is
+> a dependency-free version for chat windows and locked-down machines. It
+> produces paste-ready TSV rows, a batch report, verification checks, and log
+> entries instead of workbooks. Package:
+> [`lr-database-text.zip`](lr-database-text.zip). Start with
+> [`lr-database-text/SKILL.md`](lr-database-text/SKILL.md).
 
 A **free, open-source** universal toolkit that fully automates the **Literature Review Database SOP** (Standard Operating Procedure). Processes PDF batches through a 6-step pipeline: Ingest → Deduplicate → Extract (LLM) → Assemble (Excel) → Verify → Log.
 
