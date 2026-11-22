@@ -11,7 +11,8 @@
 > **No-install skill (text-only).** [`lr-database-text/`](lr-database-text/) is
 > a dependency-free version for chat windows and locked-down machines. It
 > produces paste-ready TSV rows, a batch report, verification checks, and log
-> entries instead of workbooks. Package:
+> entries instead of workbooks. It ships global `/lr` and `/lr-audit` command
+> wrappers that work in any folder. Package:
 > [`lr-database-text.zip`](lr-database-text.zip). Start with
 > [`lr-database-text/SKILL.md`](lr-database-text/SKILL.md).
 

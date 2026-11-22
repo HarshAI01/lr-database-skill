@@ -33,8 +33,38 @@ rows the user pastes into their existing SOP workbooks.
 - **As an installed skill:** invoke `/lr-database-text` or ask naturally ("add
   these papers to my LR database"). The skill is one folder with `SKILL.md`; no
   dependencies are installed.
-- **In a file-capable agent:** save the TSV blocks as UTF-8 `.tsv` files beside
-  the project if the user prefers files over copy-paste. Never generate `.xlsx`.
+- **As a slash command:** `/lr` runs the full workflow in the current folder;
+  `/lr-audit` checks an existing matrix. Both accept an optional folder path.
+  The `commands/opencode/` and `commands/claude/` folders ship the wrappers;
+  copy the two files into the matching commands folder if needed.
+- **In a file-capable agent:** save the TSV blocks as UTF-8 `.tsv` files in the
+  target folder's `Outputs/` if the user prefers files over copy-paste. Never
+  generate `.xlsx`.
+
+## Folder handling — works anywhere
+
+Never hardcode a project path.
+
+1. **Explicit path** — if the user or command supplies a folder, resolve it to
+   an absolute path and use it exactly.
+2. **Agent with a working directory** — otherwise use the current folder.
+3. **Chat with no filesystem** — work from the uploaded PDFs; folder rules do
+   not apply. Ask the user to upload the files.
+
+In a file-capable agent, ensure the target contains:
+
+```text
+Incoming/      new PDFs
+Database/      processed PDFs
+Outputs/       TSV rows and audit files
+Set-Aside/     duplicates and rejects
+SOP-Log.md     running audit trail
+```
+
+Create missing folders and an empty `SOP-Log.md` when needed. Never overwrite an
+existing file with the same name. Process PDFs directly in `Incoming/`, or in
+the folder root if the user put them there. Do not recurse into subfolders
+unless asked. If the target has no PDFs, say so and stop; do not invent a batch.
 
 ## Hard rules
 
@@ -321,6 +351,19 @@ Then give these steps, numbered and short:
 3. Save both workbooks. Do not change existing rows.
 4. Append the log entry to `SOP-Log.md`.
 5. Optionally run the Python `verify` command if that skill is installed.
+
+### Folder-mode files
+
+When file tools exist, save these before printing the handoff:
+
+- `Outputs/LR Matrix rows YYYY-MM-DD.tsv`
+- `Outputs/metadata batch YYYY-MM-DD.tsv`
+- `Outputs/verification YYYY-MM-DD.md`
+
+Use UTF-8, the exact headers, and the same TSV rules. If a filename already
+exists, append ` (2)` rather than overwriting earlier rows. Append the log entry
+to `SOP-Log.md`. If there are no file tools, skip this and print the blocks in
+chat.
 
 ## Worked example (shape only)
 
