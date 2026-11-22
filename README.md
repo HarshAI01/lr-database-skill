@@ -1,5 +1,13 @@
 # LR Database — Literature Review Database Pipeline
 
+> **Production skill (Python-only).** The self-contained, `SKILL.md`-conformant
+> release lives in [`lr-database/`](lr-database/) and is packaged as
+> [`lr-database.zip`](lr-database.zip). It needs only
+> `pip install -r lr-database/scripts/requirements.txt` — no Node.js, no API
+> keys, and no platform adapters. Start with
+> [`lr-database/SKILL.md`](lr-database/SKILL.md); the field-level rules are in
+> [`lr-database/references/sop-rules.md`](lr-database/references/sop-rules.md).
+
 A **free, open-source** universal toolkit that fully automates the **Literature Review Database SOP** (Standard Operating Procedure). Processes PDF batches through a 6-step pipeline: Ingest → Deduplicate → Extract (LLM) → Assemble (Excel) → Verify → Log.
 
 **Works on ANY platform**: OpenCode, Claude Desktop (MCP), Cursor, VS Code, Claude Code, Standalone CLI, Docker.
