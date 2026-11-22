@@ -15,7 +15,8 @@ description: >
   "chat-only literature review", "no Python", "no scripts", "literature review
   Excel".
 license: MIT
-version: 1.0.0
+metadata:
+  version: "1.0.0"
 ---
 
 # LR Database — Text-Only
@@ -30,13 +31,10 @@ rows the user pastes into their existing SOP workbooks.
 
 - **In chat:** paste this file as the first message, attach the PDFs, then answer
   the project-state question. Claude, ChatGPT, and Gemini all work.
-- **As an installed skill:** invoke `/lr-database-text` or ask naturally ("add
-  these papers to my LR database"). The skill is one folder with `SKILL.md`; no
-  dependencies are installed.
-- **As a slash command:** `/lr` runs the full workflow in the current folder;
-  `/lr-audit` checks an existing matrix. Both accept an optional folder path.
-  The `commands/opencode/` and `commands/claude/` folders ship the wrappers;
-  copy the two files into the matching commands folder if needed.
+- **As an installed skill:** invoke `/lr-database-text` or ask naturally ("add these
+  papers to my LR database"). The skill needs no dependencies.
+- **As a slash command:** if `/lr` and `/lr-audit` are installed, they call this
+  skill in the current folder or in a folder passed as an argument.
 - **In a file-capable agent:** save the TSV blocks as UTF-8 `.tsv` files in the
   target folder's `Outputs/` if the user prefers files over copy-paste. Never
   generate `.xlsx`.
@@ -443,14 +441,23 @@ entry. Do not rewrite or renumber the user's rows; propose fixes only.
 
 ## Self-test (after editing this skill)
 
-If `references/test-cases.md` is available, run TC1–TC5 against synthetic text.
-They are QA fixtures: never write them into a real database. At minimum, check:
+Run these five checks against synthetic text. Never write test data into a real
+database or reuse the test DOIs.
 
-- **TC1 clean batch** → 2 accepted, serials `1–2`, every check PASS.
-- **TC2 duplicate DOI** → 0 accepted, batch report only, no TSV tables.
-- **TC3 serial gap** → stop before extraction, no append, gap named.
-- **TC4 scanned PDF** → set aside, remaining papers still processed.
-- **TC5 TSV integrity** → 20 and 87 fields per row, no embedded tabs.
+- **TC1 clean batch** — two readable papers; both `ACCEPTED`, serials `1–2`,
+  every verification check PASS.
+- **TC2 duplicate DOI** — one journal version and one working paper with the
+  same DOI; one `ACCEPTED`, one `DUPLICATE`, exactly one row.
+- **TC3 serial gap** — `LAST SERIAL: 5` but only four records listed; stop
+  before extraction, name the gap, append nothing.
+- **TC4 scanned PDF** — one image-only PDF and one `.docx`; both `SET ASIDE`,
+  the readable paper still processed.
+- **TC5 TSV integrity** — 9 papers; two blocks of at most 8, header repeated,
+  exactly 20 and 87 fields per row, no embedded tabs.
+
+After the tests, confirm the description still names the trigger phrases, no
+tool or package is required, keep-all is intact, and failures are reported
+rather than papered over.
 
 ## Edge cases
 
